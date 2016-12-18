@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/mvc
+		http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+
+	<bean name="/helloWorld" class="com.rxkj.controller.HelloWorldController" />
+	<!-- <bean name="/transViews" class="com.yeepay.bigdata.controller.TransViewsController2"/> -->
+
+	<!-- 配置方法解析器 -->
+	<bean
+		class="org.springframework.web.servlet.mvc.multiaction.ParameterMethodNameResolver"
+		id="paramMethodResolver">
+		<property name="paramName" value="action"></property>
+	</bean>
+
+	<!-- 将方法解析器引入到此controller中 -->
+	<bean class="com.rxkj.controller.MultiController" name="/test1/multi">
+		<property name="methodNameResolver">
+			<ref bean="paramMethodResolver" />
+		</property>
+	</bean>
+	
+	<!--I solved it. -->
+
+	<!--There are two contexts: root (application wide) and servlet context 
+		I defined viewResolver, tilesConfigurer, tx:annotation-driven and mvc:annotation-driven 
+		in the root context. -->
+
+	<!--Moving it to the servlet context solved the problem. -->
+	<!-- utf8编码 -->
+	<bean
+		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<bean
+					class="org.springframework.http.converter.StringHttpMessageConverter">
+					<property name="supportedMediaTypes">
+						<list>
+							<value>text/html;charset=UTF-8</value>
+						</list>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<!-- springMVC注解配置  下面俩个驱动注解的区别，第一个驱动可以不加/,直接@RequestMapping("transViews")，而第二种必须@RequestMapping("/transViews")-->
+	
+	<mvc:annotation-driven />
+	<!-- 
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
+	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" /> 
+	-->
+	<context:component-scan base-package="com.rxkj.*" />
+	<!--<context:component-scan base-package="com" />-->
+	
+
+	<!--<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"> -->
+	<!--<property name="prefix" value="/" /> -->
+	<!--<property name="suffix" value=".jsp" /> -->
+	<!--</bean> -->
+
+	<context:annotation-config />
+	<bean
+		class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver"></bean>
+
+	<!-- 配置视图 -->
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/WEB-INF/views/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+	<!-- <import resource="classpath:spring-jdbc.xml" /> -->
+
+	<!-- 配置一下路径不走spring请求 -->
+	<mvc:resources location="/public/img/" mapping="/public/img/**" />
+
+
+	
+</beans>

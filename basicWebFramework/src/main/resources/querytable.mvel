@@ -1,0 +1,19 @@
+<table id='test_grid' border='1'>
+	<tbody >
+	<tr>
+	@foreach{titleCell : titles}
+		<th>
+			<span>@{titleCell}</span>
+		</th>
+	@end{}
+	</tr>
+
+	@foreach{row : data}
+		<tr>
+			<td><span>@{row.username}</span></td>
+			<td><span>@{row.age}</span></td>
+			<td><span>@{row.password}</span></td>
+		</tr>
+	@end{}
+	</tbody>
+</table>
