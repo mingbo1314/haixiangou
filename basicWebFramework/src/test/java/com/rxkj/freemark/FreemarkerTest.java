@@ -20,10 +20,10 @@ public class FreemarkerTest {
         group.setName("IT");
          
         User user = new User();
-        user.setId(001);
+        user.setId(Long.valueOf(001));
         user.setName("张三");
-        user.setAge(12);
-        user.setGroup(group);
+//        user.setAge(12);
+//        user.setGroup(group);
          
         List<User> users = new ArrayList<User>();
         users.add(user);

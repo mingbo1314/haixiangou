@@ -7,6 +7,11 @@
   <version>1.0-SNAPSHOT</version>
   <name>basicWebFramework Maven Webapp</name>
   <url>http://maven.apache.org</url>
+
+  <properties>
+    <yeepay-persistence.version>1.0-SNAPSHOT</yeepay-persistence.version>
+    <yeepay-config.version>1.0-SNAPSHOT</yeepay-config.version>
+  </properties>
   <dependencies>
     <!--<dependency>-->
       <!--<groupId>junit</groupId>-->
@@ -96,6 +101,16 @@
       <groupId>com.yeepay.g3.utils</groupId>
       <artifactId>yeepay-utils-common</artifactId>
       <version>1.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>com.yeepay.g3.utils</groupId>
+      <artifactId>yeepay-persistence</artifactId>
+      <version>${yeepay-persistence.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.yeepay.g3.utils</groupId>
+      <artifactId>yeepay-config</artifactId>
+      <version>${yeepay-config.version}</version>
     </dependency>
   </dependencies>
   <build>
