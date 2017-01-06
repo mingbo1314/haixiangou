@@ -13,6 +13,7 @@ import com.rxkj.hxg.service.BannerChannelService;
 import com.yeepay.g3.utils.common.json.JSONUtils;
 import com.yeepay.g3.utils.common.log.Logger;
 import com.yeepay.g3.utils.common.log.LoggerFactory;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,6 +46,7 @@ public class HomeController extends BaseController {
         bannerChannelParams.setStatus(StatusEnum.ACTIVE);
         //查询所有的banner
         List<BannerChannel> bannerChannels = bannerChannelService.queryBannerChannel(bannerChannelParams);
+        System.out.println(ToStringBuilder.reflectionToString(bannerChannels));
         //查询所有的channel
         //个性推荐（查询打折商品前10条）
         //TOP10 排行榜（查询热销数量最多的前10条）
