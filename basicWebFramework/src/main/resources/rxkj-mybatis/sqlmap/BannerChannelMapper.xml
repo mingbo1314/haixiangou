@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="BannerChannel" >
+  <resultMap id="BannerChannelMap" type="com.rxkj.hxg.entity.BannerChannel" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="icon_url" property="iconUrl" jdbcType="VARCHAR" />
+    <result column="scheme_type" property="schemeType" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="image_type" property="imageType" jdbcType="VARCHAR" />
+    <result column="scheme_id" property="schemeId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, icon_url, scheme_type, status, image_type, scheme_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BannerChannelMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from TBL_BANNER_CHANNEL
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from TBL_BANNER_CHANNEL
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.rxkj.hxg.entity.BannerChannel" >
+    insert into TBL_BANNER_CHANNEL (id, name, icon_url, 
+      scheme_type, status, image_type, 
+      scheme_id)
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{iconUrl,jdbcType=VARCHAR}, 
+      #{schemeType,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{imageType,jdbcType=VARCHAR}, 
+      #{schemeId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.rxkj.hxg.entity.BannerChannel" >
+    insert into TBL_BANNER_CHANNEL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="iconUrl != null" >
+        icon_url,
+      </if>
+      <if test="schemeType != null" >
+        scheme_type,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="imageType != null" >
+        image_type,
+      </if>
+      <if test="schemeId != null" >
+        scheme_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="iconUrl != null" >
+        #{iconUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="schemeType != null" >
+        #{schemeType,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="imageType != null" >
+        #{imageType,jdbcType=VARCHAR},
+      </if>
+      <if test="schemeId != null" >
+        #{schemeId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rxkj.hxg.entity.BannerChannel" >
+    update TBL_BANNER_CHANNEL
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="iconUrl != null" >
+        icon_url = #{iconUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="schemeType != null" >
+        scheme_type = #{schemeType,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="imageType != null" >
+        image_type = #{imageType,jdbcType=VARCHAR},
+      </if>
+      <if test="schemeId != null" >
+        scheme_id = #{schemeId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rxkj.hxg.entity.BannerChannel" >
+    update TBL_BANNER_CHANNEL
+    set name = #{name,jdbcType=VARCHAR},
+      icon_url = #{iconUrl,jdbcType=VARCHAR},
+      scheme_type = #{schemeType,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      image_type = #{imageType,jdbcType=VARCHAR},
+      scheme_id = #{schemeId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="queryAll" parameterType="com.rxkj.hxg.params.BannerChannelParams" resultMap="BannerChannelMap">
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM TBL_BANNER_CHANNEL 
+    <where>
+      <if test="schemeType != null and schemeType != ''">
+        scheme_type = #{schemeType}
+      </if>
+      <if test="status != null and status != ''">
+        AND status = #{status}
+      </if>
+    </where>
+  </select>
+</mapper>

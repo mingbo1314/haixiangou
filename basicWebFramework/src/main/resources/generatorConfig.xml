@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC
+		"-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+		"http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+
+	<!--导入属性配置 -->
+	<properties resource="generator.properties"></properties>
+
+	<!-- 制定mysql的驱动包的路径 不要放中文路径下 -->
+	<!--<classPathEntry location="/Users/yp-tc-m-2808/Documents/soft/localRepository/mysql/mysql-connector-java/5.1.14/mysql-connector-java-5.1.14.jar" />-->
+	<classPathEntry location="${jdbc.driverLocation}"/>
+
+	<!-- 配置数据源和生成的代码所存放的位置 -->
+	<context id="context1">
+		<!-- 去掉注释 -->
+		<commentGenerator>
+			<property name="suppressDate" value="true"/>
+			<property name="suppressAllComments" value="true" />
+		</commentGenerator>
+
+		<!--<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://172.17.102.179:3306/BPU_CREDITTRANS" userId="root" password="newpassword" />-->
+		<!--jdbc的数据库连接 -->
+		<jdbcConnection driverClass="${jdbc.driverClass}" connectionURL="${jdbc.connectionURL}" userId="${jdbc.userId}" password="${jdbc.password}">
+		</jdbcConnection>
+		<!-- 所生成的实体类的位置默认资源包src -->
+		<!--<javaModelGenerator targetPackage="com.rxkj.entity" targetProject="src/main/java"/>-->
+		<javaModelGenerator targetPackage="com.rxkj.hxg.entity" targetProject="src/main/java">
+			<property name="enableSubPackages" value="true"/>
+			<property name="trimStrings" value="true"/>
+		</javaModelGenerator>
+		<!-- 所生成的sqlMap的影射文件的位置,默认资源包src -->
+		<sqlMapGenerator targetPackage="rxkj-mybatis/sqlmap" targetProject="src/main/resources" />
+		<javaClientGenerator type="XMLMAPPER" targetPackage="com.rxkj.hxg.dao" targetProject="src/main/java">
+			<property name="enableSubPackages" value="true"/>
+		</javaClientGenerator>
+		<!-- 为哪些表生成代码 tableName:表名 schema:不用填写 -->
+		<table schema="seafood_purchase" tableName="TBL_BANNER_CHANNEL" domainObjectName="BannerChannel" enableCountByExample="false"
+			enableUpdateByExample="false" enableDeleteByExample="false"
+			enableSelectByExample="false" selectByExampleQueryId="false">
+		</table>
+	</context>
+</generatorConfiguration>

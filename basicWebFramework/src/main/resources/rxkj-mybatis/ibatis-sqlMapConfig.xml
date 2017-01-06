@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+    PUBLIC "-//ibatis.apache.org//DTD Config 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-config.dtd">
+<configuration>
+
+	<settings>
+		<setting name="cacheEnabled" value="true" />
+		<setting name="lazyLoadingEnabled" value="false" />
+		<setting name="aggressiveLazyLoading" value="false" />
+		<setting name="multipleResultSetsEnabled" value="true" />
+		<setting name="useColumnLabel" value="true" />
+		<setting name="useGeneratedKeys" value="false" />
+		<setting name="defaultExecutorType" value="SIMPLE" />
+		<setting name="defaultStatementTimeout" value="25000" />
+	</settings>
+
+	<typeAliases>
+		<!-- 数据库映射实体类别名设置 -->
+		<typeAlias alias="BannerChannel" type="com.rxkj.hxg.entity.BannerChannel" />
+		<typeAlias alias="Commodity" type="com.rxkj.hxg.entity.Commodity" />
+		<typeAlias alias="User" type="com.rxkj.hxg.entity.User" />
+		<typeAlias type="com.rxkj.hxg.entity.MERCHANT" alias="MERCHANT" />
+	</typeAliases>
+
+	<plugins>
+		<plugin interceptor="com.github.pagehelper.PageHelper">
+			<property name="dialect" value="mysql"/>
+			<property name="supportMethodsArguments" value="true"/>
+		</plugin>
+	</plugins>
+	
+</configuration>

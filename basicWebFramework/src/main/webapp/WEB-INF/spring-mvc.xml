@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+    <!--测试用 -->
+    <bean name="/helloWorld" class="com.rxkj.hxg.controller.HelloWorldController" />
+
+    <context:component-scan base-package="com.rxkj.hxg.*"/>
+    <!-- 配置了包扫描之后，<context annotation-config />就可以移除了,主要让下面注解起作用：@AutoWired、@Resource、@PostConstruct、@Predestory、@PersistenceContext、@Required
+    component-scan标签默认情况下自动扫描指定路径下的包（含所有子包），将带有@Component、@Repository、@Service、@Controller标签的类自动注册到spring容器。对标记了 Spring's @Required、@Autowired、JSR250's @PostConstruct、@PreDestroy、@Resource、JAX-WS's @WebServiceRef、EJB3's @EJB、JPA's @PersistenceContext、@PersistenceUnit等注解的类进行对应的操作使注解生效（包含了annotation-config标签的作用
+    -->
+    <!--<context:annotation-config />-->
+    <!--<bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />-->
+    <!--<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"></bean>-->
+
+    <!--开启spring的Valid和Conversion功能,使用<mvc:annotation-driven/>相当于注册了下面的俩个bean，主要让下面注解起作用：@Component、@Repository、@Service、@Controller -->
+	<mvc:annotation-driven validator="validator" conversion-service="conversionService">
+        <!--Spring MVC @ResponseBody返回中文字符串乱码问题 -->
+        <mvc:message-converters register-defaults="true">
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes" value="application/json;charset=UTF-8"/>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+    <!--
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
+	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" />
+	-->
+
+    <!--配置统一异常拦截器 -->
+    <bean id="exceptionHandler" class="com.rxkj.hxg.exception.handler.ExceptionHandler" />
+
+    <!--发送http请求到controller时，将一个字符串去掉首位空格 -->
+    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <bean class="com.rxkj.hxg.utils.TrimStringConverter"></bean>
+            </set>
+        </property>
+    </bean>
+
+    <!-- 配置注解验证 -->
+    <bean id="validator"
+          class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        <property name="providerClass" value="org.hibernate.validator.HibernateValidator" />
+        <!-- 如果不加默认到 使用classpath下的 ValidationMessages.properties -->
+        <property name="validationMessageSource" ref="validationMessageSource" />
+    </bean>
+
+    <!-- 国际化验证消息资源文件 -->
+    <bean id="validationMessageSource"
+          class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basenames">
+            <list>
+                <value>classpath:validation_cn_ZH</value>
+                <!--<value>validation_cn_ZH</value>-->
+            </list>
+        </property>
+        <property name="useCodeAsDefaultMessage" value="true" />
+        <property name="defaultEncoding" value="UTF-8" />
+        <property name="cacheSeconds" value="60" />
+    </bean>
+
+    <!--下面这俩个配置测试多参数请求用了，先配置，以后可能用到 -->
+    <!-- 配置方法解析器 -->
+    <bean class="org.springframework.web.servlet.mvc.multiaction.ParameterMethodNameResolver" id="paramMethodResolver">
+        <property name="paramName" value="action"></property>
+    </bean>
+
+    <!-- 将方法解析器引入到此controller中 -->
+    <bean class="com.rxkj.hxg.controller.MultiController" name="/test1/multi">
+        <property name="methodNameResolver">
+            <ref bean="paramMethodResolver" />
+        </property>
+    </bean>
+
+    <!--<mvc:interceptors>-->
+        <!--<bean class="com.yeepay.bpu.credittrans.interceptor.ParametersInterceptor"/>-->
+        <!--<bean class="com.yeepay.bpu.credittrans.interceptor.SessionSharingInterceptor"/>-->
+        <!--<mvc:interceptor>-->
+            <!--<mvc:mapping path="/**"/>-->
+            <!--<mvc:exclude-mapping path="/"/>-->
+            <!--<mvc:exclude-mapping path="/user/login"/>-->
+            <!--<mvc:exclude-mapping path="/user/signout"/>-->
+            <!--<mvc:exclude-mapping path="/user/findPassword"/>-->
+            <!--<mvc:exclude-mapping path="/user/checkCode"/>-->
+            <!--<mvc:exclude-mapping path="/registry/*"/>-->
+            <!--<mvc:exclude-mapping path="/common/exception"/>-->
+            <!--<bean class="com.yeepay.bpu.credittrans.interceptor.SessionInterceptor"/>-->
+        <!--</mvc:interceptor>-->
+        <!--<mvc:interceptor>-->
+            <!--<mvc:mapping path="/**"/>-->
+            <!--<mvc:exclude-mapping path="/"/>-->
+            <!--<mvc:exclude-mapping path="/user/login"/>-->
+            <!--<mvc:exclude-mapping path="/user/signout"/>-->
+            <!--<mvc:exclude-mapping path="/user/findPassword"/>-->
+            <!--<mvc:exclude-mapping path="/user/checkCode"/>-->
+            <!--<mvc:exclude-mapping path="/registry/*"/>-->
+            <!--<mvc:exclude-mapping path="/common/exception"/>-->
+            <!--<mvc:exclude-mapping path="/user/offlineTips"/>-->
+            <!--<bean class="com.yeepay.bpu.credittrans.interceptor.OnlineCheckingInterceptor"/>-->
+        <!--</mvc:interceptor>-->
+
+     <!--<mvc:interceptor>-->
+            <!--<mvc:mapping path="/**"/>-->
+            <!--<mvc:exclude-mapping path="/"/>-->
+            <!--<mvc:exclude-mapping path="/user/login"/>-->
+            <!--<mvc:exclude-mapping path="/user/signout"/>-->
+            <!--<mvc:exclude-mapping path="/user/findPassword"/>-->
+            <!--<mvc:exclude-mapping path="/user/checkCode"/>           -->
+            <!--<mvc:exclude-mapping path="/common/error"/>           -->
+            <!--<mvc:exclude-mapping path="/common/exception"/>-->
+            <!--<mvc:exclude-mapping path="/registry/*"/>-->
+        <!--<bean class="com.yeepay.bpu.credittrans.interceptor.FunctionInterceptor"/>-->
+        <!--</mvc:interceptor>-->
+        <!---->
+        <!--<bean class="com.yeepay.bpu.credittrans.interceptor.MenuInterceptor"/>-->
+
+    <!--</mvc:interceptors>-->
+
+    <!--静态资源文件 -->
+    <mvc:resources location="/public/" mapping="/public/**" />
+
+    <!--<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">-->
+        <!--<property name="prefix" value="/WEB-INF/views/"/>-->
+        <!--<property name="suffix" value=".jsp"/>-->
+    <!--</bean>-->
+    <!-- 配置视图 -->
+    <bean id="viewResolver"
+          class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+        <property name="viewClass"
+                  value="org.springframework.web.servlet.view.JstlView" />
+        <property name="prefix" value="/WEB-INF/views/" />
+        <property name="suffix" value=".jsp" />
+    </bean>
+
+    <!--- StringHttpMessageConverter bean -->
+    <!--<bean id="stringHttpMessageConverter"-->
+          <!--class="org.springframework.http.converter.StringHttpMessageConverter" />-->
+
+    <!--<bean id="mappingJacksonHttpMessageConverter"-->
+          <!--class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />-->
+
+    <!--<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" />-->
+
+    <!--<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">-->
+        <!--<property name="messageConverters">-->
+            <!--<list>-->
+                <!--<ref bean="mappingJacksonHttpMessageConverter" />-->
+                <!--&lt;!&ndash; 新增的StringMessageConverter bean &ndash;&gt;-->
+                <!--<ref bean="stringHttpMessageConverter" />-->
+                <!--&lt;!&ndash; <ref bean="jsonHttpMessageConverter" /> <ref bean="formHttpMessageConverter" -->
+                    <!--/> &ndash;&gt;-->
+            <!--</list>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                    <property name="supportedMediaTypes">
+                        <list>
+                            <!--返回字符串格式json-->
+                            <value>text/plain;charset=UTF-8</value>
+                        </list>
+                    </property>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <!--<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">-->
+        <!--<property name="exceptionMappings">-->
+            <!--<props>-->
+                <!--<prop key="java.lang.Throwable">common/error_exception</prop>-->
+            <!--</props>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+    <!-- fileupload -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding" value="utf-8" />
+        <!-- <property name="maxUploadSize" value="3145749" />  --><!-- 最大为3m -->
+        <property name="maxInMemorySize" value="40960" />
+    </bean>
+
+</beans>

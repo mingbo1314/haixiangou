@@ -9,8 +9,35 @@
 		http://www.springframework.org/schema/mvc
 		http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
 
-	<bean name="/helloWorld" class="com.rxkj.controller.HelloWorldController" />
+	<bean name="/helloWorld" class="com.rxkj.hxg.controller.HelloWorldController" />
 	<!-- <bean name="/transViews" class="com.yeepay.bigdata.controller.TransViewsController2"/> -->
+
+	<!--开启spring的Valid功能 -->
+	<mvc:annotation-driven validator="validator" />
+
+	<bean id="exceptionHandler" class="com.rxkj.hxg.exception.handler.ExceptionHandler" />
+
+	<!-- 配置注解验证 -->
+	<bean id="validator"
+		  class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+		<property name="providerClass" value="org.hibernate.validator.HibernateValidator" />
+		<!-- 如果不加默认到 使用classpath下的 ValidationMessages.properties -->
+		<property name="validationMessageSource" ref="validationMessageSource" />
+	</bean>
+
+	<!-- 国际化验证消息资源文件 -->
+	<bean id="validationMessageSource"
+		  class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>classpath:validation_cn_ZH</value>
+				<!--<value>validation_cn_ZH</value>-->
+			</list>
+		</property>
+		<property name="useCodeAsDefaultMessage" value="true" />
+		<property name="defaultEncoding" value="UTF-8" />
+		<property name="cacheSeconds" value="60" />
+	</bean>
 
 	<!-- 配置方法解析器 -->
 	<bean
@@ -20,16 +47,16 @@
 	</bean>
 
 	<!-- 将方法解析器引入到此controller中 -->
-	<bean class="com.rxkj.controller.MultiController" name="/test1/multi">
+	<bean class="com.rxkj.hxg.controller.MultiController" name="/test1/multi">
 		<property name="methodNameResolver">
 			<ref bean="paramMethodResolver" />
 		</property>
 	</bean>
-	
+
 	<!--I solved it. -->
 
-	<!--There are two contexts: root (application wide) and servlet context 
-		I defined viewResolver, tilesConfigurer, tx:annotation-driven and mvc:annotation-driven 
+	<!--There are two contexts: root (application wide) and servlet context
+		I defined viewResolver, tilesConfigurer, tx:annotation-driven and mvc:annotation-driven
 		in the root context. -->
 
 	<!--Moving it to the servlet context solved the problem. -->
@@ -50,20 +77,13 @@
 		</property>
 	</bean>
 	<!-- springMVC注解配置  下面俩个驱动注解的区别，第一个驱动可以不加/,直接@RequestMapping("transViews")，而第二种必须@RequestMapping("/transViews")-->
-	
-	<mvc:annotation-driven />
-	<!-- 
-	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
-	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" /> 
-	-->
-	<context:component-scan base-package="com.rxkj.*" />
-	<!--<context:component-scan base-package="com" />-->
-	
 
-	<!--<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"> -->
-	<!--<property name="prefix" value="/" /> -->
-	<!--<property name="suffix" value=".jsp" /> -->
-	<!--</bean> -->
+	<!--<mvc:annotation-driven />-->
+	<!--
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
+	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" />
+	-->
+	<!--<context:component-scan base-package="com.rxkj.hxg.*" />-->
 
 	<context:annotation-config />
 	<bean
@@ -84,6 +104,13 @@
 	<!-- 配置一下路径不走spring请求 -->
 	<mvc:resources location="/public/img/" mapping="/public/img/**" />
 
+	<!-- 国际化支持 -->
+	<bean id="messageSource"
+		  class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="defaultEncoding" value="utf8" />
+		<property name="basename">
+			<value>messages</value>
+		</property>
+	</bean>
 
-	
 </beans>
